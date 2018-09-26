@@ -201,12 +201,14 @@ module.exports = Marionette.LayoutView.extend({
     this.queryContent.currentView.setDefaultTitle()
   },
   saveRun: function() {
+    this.model.set('invalid', false)
     this.queryContent.currentView.save()
     this.queryTitle.currentView.save()
     if (this.model.get('title') === 'Search Name') {
       this.setDefaultTitle()
     }
-    if (this.model.get('valid') === false) {
+    console.log(this.model)
+    if (this.model.get('invalid')) {
       announcement.announce({
         title: 'Validation Issues: Search Form cannot be run.',
         message:
@@ -216,8 +218,6 @@ module.exports = Marionette.LayoutView.extend({
       return
     }
     if (store.getCurrentQueries().canAddQuery()) {
-      console.log(store.getCurrentQueries())
-      console.log(this.model)
       store.getCurrentQueries().add(this.model)
       this.endSave()
     } else {
