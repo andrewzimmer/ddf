@@ -228,6 +228,14 @@ module.exports = Marionette.LayoutView.extend({
   save: function() {
     this.queryContent.currentView.save()
     this.queryTitle.currentView.save()
+    if(this.model.get('valid') === false){
+      announcement.announce({
+        title: 'Validation Issues: Search Form cannot be run.',
+        message: 'Please verify your configurations and attempt to search again.',
+        type: 'error',
+      })
+      return
+    }
     if (store.getCurrentQueries().get(this.model) === undefined) {
       store.getCurrentQueries().add(this.model)
     }
@@ -238,6 +246,14 @@ module.exports = Marionette.LayoutView.extend({
   saveRun: function() {
     this.queryContent.currentView.save()
     this.queryTitle.currentView.save()
+    if(this.model.get('valid') === false){
+      announcement.announce({
+        title: 'Validation Issues: Search Form cannot be run.',
+        message: 'Please verify your configurations and attempt to search again.',
+        type: 'error',
+      })
+      return
+    }
     if (store.getCurrentQueries().get(this.model) === undefined) {
       store.getCurrentQueries().add(this.model)
     }

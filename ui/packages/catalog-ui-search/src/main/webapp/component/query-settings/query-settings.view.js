@@ -40,7 +40,7 @@ module.exports = plugin(
     events: {
       'click .editor-edit': 'turnOnEditing',
       'click .editor-cancel': 'cancel',
-      'click .editor-save': 'save',
+      'click .editor-save': 'saveOnClick',
       'click .editor-saveRun': 'run',
     },
     regions: {
@@ -205,6 +205,19 @@ module.exports = plugin(
     saveToModel: function() {
       this.model.set(this.toJSON())
     },
+    saveOnClick: function(){
+      this.saveToModel()
+      if(this.model.get('valid') === false){
+        announcement.announce({
+          title: 'Validation Issues: Search Form cannot be run.',
+          message: 'Please verify your configurations and attempt to search again.',
+          type: 'error',
+        })
+        return
+      }
+      this.cancel()
+      this.$el.trigger('closeDropdown.' + CustomElements.getNamespace())
+    },
     save: function() {
       this.saveToModel()
       this.cancel()
@@ -212,6 +225,14 @@ module.exports = plugin(
     },
     run: function() {
       this.saveToModel()
+      if(this.model.get('valid') === false){
+        announcement.announce({
+          title: 'Validation Issues: Search Form cannot be run.',
+          message: 'Please verify your configurations and attempt to search again.',
+          type: 'error',
+        })
+        return
+      }
       this.cancel()
       this.model.startSearch()
       store.setCurrentQuery(this.model)
