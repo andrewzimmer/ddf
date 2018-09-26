@@ -205,12 +205,13 @@ module.exports = plugin(
     saveToModel: function() {
       this.model.set(this.toJSON())
     },
-    saveOnClick: function(){
+    saveOnClick: function() {
       this.saveToModel()
-      if(this.model.get('valid') === false){
+      if (this.model.get('valid') === false) {
         announcement.announce({
           title: 'Validation Issues: Search Form cannot be run.',
-          message: 'Please verify your configurations and attempt to search again.',
+          message:
+            'Please verify your configurations and attempt to search again.',
           type: 'error',
         })
         return
@@ -225,10 +226,11 @@ module.exports = plugin(
     },
     run: function() {
       this.saveToModel()
-      if(this.model.get('valid') === false){
+      if (this.model.get('valid') === false) {
         announcement.announce({
           title: 'Validation Issues: Search Form cannot be run.',
-          message: 'Please verify your configurations and attempt to search again.',
+          message:
+            'Please verify your configurations and attempt to search again.',
           type: 'error',
         })
         return
