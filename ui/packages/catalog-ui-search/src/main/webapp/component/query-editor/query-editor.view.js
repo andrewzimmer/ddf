@@ -24,6 +24,8 @@ const cql = require('js/cql')
 const CQLUtils = require('js/CQLUtils')
 const store = require('js/store')
 const user = require('component/singletons/user-instance')
+const announcement = require('component/announcement')
+const invalidSearchForm = require('js/invalidSearchForm')
 
 function isNested(filter) {
   var nested = false
@@ -226,6 +228,10 @@ module.exports = Marionette.LayoutView.extend({
     this.onBeforeShow()
   },
   save: function() {
+    if (!this.queryContent.currentView.isValid()) {
+      announcement.announce(invalidSearchForm)
+      return
+    }
     this.queryContent.currentView.save()
     this.queryTitle.currentView.save()
     if (store.getCurrentQueries().get(this.model) === undefined) {
@@ -236,6 +242,10 @@ module.exports = Marionette.LayoutView.extend({
     this.originalType = this.model.get('type')
   },
   saveRun: function() {
+    if (!this.queryContent.currentView.isValid()) {
+      announcement.announce(invalidSearchForm)
+      return
+    }
     this.queryContent.currentView.save()
     this.queryTitle.currentView.save()
     if (store.getCurrentQueries().get(this.model) === undefined) {

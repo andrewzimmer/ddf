@@ -31,6 +31,7 @@ const cql = require('js/cql')
 const announcement = require('component/announcement')
 const SearchFormModel = require('component/search-form/search-form.js')
 const properties = require('properties')
+const invalidSearchForm = require('js/invalidSearchForm')
 const lightboxResultInstance = require('component/lightbox/result/lightbox.result.view')
 const lightboxInstance = lightboxResultInstance.generateNewLightbox()
 const QueryResult = properties.hasExperimentalEnabled()
@@ -201,6 +202,10 @@ module.exports = Marionette.LayoutView.extend({
     this.queryContent.currentView.setDefaultTitle()
   },
   saveRun: function() {
+    if (!this.queryContent.currentView.isValid()) {
+      announcement.announce(invalidSearchForm)
+      return
+    }
     this.queryContent.currentView.save()
     this.queryTitle.currentView.save()
     if (this.model.get('title') === 'Search Name') {
