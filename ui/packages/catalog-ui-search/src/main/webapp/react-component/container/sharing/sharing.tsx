@@ -122,7 +122,7 @@ export class Sharing extends React.Component<Props, State> {
         }
 
         const workspace = store.getWorkspaceById(this.props.id)
-        if(workspace !== undefined){
+        if (workspace !== undefined) {
           store.setWorkspaceRestrictions(workspace, attributes)
         }
 
