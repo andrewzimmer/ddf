@@ -10,18 +10,24 @@
  *
  **/
 /*global define*/
-const _ = require('underscore')
+import React from 'react'
 const Tabs = require('../tabs')
-const store = require('../../../js/store.js')
+const Marionette = require('marionette')
 const MetacardBasicView = require('../../editor/metacard-basic/metacard-basic.view.js')
 const MetacardAdvancedView = require('../../editor/metacard-advanced/metacard-advanced.view.js')
 const MetacardHistoryView = require('../../metacard-history/metacard-history.view.js')
 const MetacardAssociationsView = require('../../metacard-associations/metacard-associations.view.js')
 const MetacardQualityView = require('../../metacard-quality/metacard-quality.view.js')
-const MetacardActionsView = require('../../metacard-actions/metacard-actions.view.js')
 const MetacardArchiveView = require('../../metacard-archive/metacard-archive.view.js')
 const MetacardOverwriteView = require('../../metacard-overwrite/metacard-overwrite.view.js')
 const MetacardPreviewView = require('../../metacard-preview/metacard-preview.view.js')
+import MetacardActions from '../../../react-component/container/metacard-actions'
+
+const MetacardActionsView = Marionette.LayoutView.extend({
+  template(options) {
+    return <MetacardActions options={options} />
+  },
+})
 
 module.exports = Tabs.extend({
   defaults: {
