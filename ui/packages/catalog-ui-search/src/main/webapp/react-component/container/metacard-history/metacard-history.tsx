@@ -52,30 +52,32 @@ class MetacardHistory extends React.Component<Props, State> {
     this.loadData()
   }
 
-  loadData = () => {
-    setTimeout(() => {
-      fetch(`./internal/history/${this.state.model.get('metacard').get('id')}`)
-        .then(response => {
-          if (response.status === 204) {
-            return []
-          }
-          return response.json()
-        })
-        .then(history => {
-          history.sort((historyItem1: any, historyItem2: any) => {
-            return (
-              moment.unix(historyItem2.versioned) -
-              moment.unix(historyItem1.versioned)
-            )
-          })
-          history.forEach((historyItem: any, index: any) => {
-            historyItem.niceDate = Common.getMomentDate(
-              moment.unix(historyItem.versioned.seconds).valueOf()
-            )
-            historyItem.versionNumber = history.length - index
-          })
-          this.setState({ history, loading: false })
-        })
+  loadData() {
+    setTimeout(async () => {
+      const res = await fetch(
+        `./internal/history/${this.state.model.get('metacard').get('id')}`
+      )
+
+      if (!res.ok || res.status === 204) {
+        this.setState({ history: [], loading: false })
+        return
+      }
+
+      const history = await res.json()
+      history.sort((historyItem1: any, historyItem2: any) => {
+        return (
+          moment.unix(historyItem2.versioned) -
+          moment.unix(historyItem1.versioned)
+        )
+      })
+      history.forEach((historyItem: any, index: any) => {
+        historyItem.niceDate = Common.getMomentDate(
+          moment.unix(historyItem.versioned.seconds).valueOf()
+        )
+        historyItem.versionNumber = history.length - index
+      })
+
+      this.setState({ history, loading: false })
     }, 1000)
   }
 
@@ -84,42 +86,50 @@ class MetacardHistory extends React.Component<Props, State> {
     this.setState({ selectedVersion })
   }
 
-  revertToSelectedVersion = () => {
+  revertToSelectedVersion = async () => {
     this.setState({ loading: true })
-    fetch(
+
+    const res = await fetch(
       `./internal/history/revert/${this.state.model
         .get('metacard')
         .get('id')}/${this.state.selectedVersion}`
     )
-      .then(response => response.json())
-      .then(() => {
+
+    if (!res.ok) {
+      this.setState({ loading: false })
+      announcement.announce({
+        title: 'Unable to revert ot the selected version',
+        message: 'Something went wrong.',
+        type: 'warn',
+      })
+      return
+    }
+
+    this.state.model
+      .get('metacard')
+      .get('properties')
+      .set('metacard-tags', ['revision'])
+    ResultUtils.refreshResult(this.state.model)
+
+    setTimeout(() => {
+      //let solr flush
+      this.state.model.trigger('refreshdata')
+      if (
         this.state.model
           .get('metacard')
           .get('properties')
-          .set('metacard-tags', ['revision'])
-        ResultUtils.refreshResult(this.state.model)
-      })
-      .then(() => {
-        setTimeout(() => {
-          //let solr flush
-          this.state.model.trigger('refreshdata')
-          if (
-            this.state.model
-              .get('metacard')
-              .get('properties')
-              .get('metacard-tags')
-              .indexOf('revision') >= 0
-          ) {
-            announcement.announce({
-              title: 'Waiting on Reverted Data',
-              message:
-                "It's taking an unusually long time for the reverted data to come back.  The item will be put in a revisionlike state (read-only) until data returns.",
-              type: 'warn',
-            })
-          }
-          this.loadData()
-        }, 2000)
-      })
+          .get('metacard-tags')
+          .indexOf('revision') >= 0
+      ) {
+        announcement.announce({
+          title: 'Waiting on Reverted Data',
+          message:
+            "It's taking an unusually long time for the reverted data to come back.  The item will be put in a revisionlike state (read-only) until data returns.",
+          type: 'warn',
+        })
+      }
+      this.loadData()
+    }, 2000)
   }
 
   render() {
