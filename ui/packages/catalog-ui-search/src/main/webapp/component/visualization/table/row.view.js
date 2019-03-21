@@ -13,28 +13,27 @@
  *
  **/
 /*global require*/
-var wreqr = require('../../../js/wreqr.js')
-var _ = require('underscore')
 var template = require('./row.hbs')
 var Marionette = require('marionette')
 var CustomElements = require('../../../js/CustomElements.js')
-var store = require('../../../js/store.js')
-var $ = require('jquery')
 var metacardDefinitions = require('../../singletons/metacard-definitions.js')
-var Common = require('../../../js/Common.js')
 var user = require('../../singletons/user-instance.js')
 var properties = require('../../../js/properties.js')
 var HoverPreviewDropdown = require('../../dropdown/hover-preview/dropdown.hover-preview.view.js')
 var DropdownModel = require('../../dropdown/dropdown.js')
+import React from 'react'
+import Checkbox from '../../../react-component/presentation/checkbox/checkbox'
 
 module.exports = Marionette.LayoutView.extend({
   className: 'is-tr',
   tagName: CustomElements.register('result-row'),
   events: {
     'click .result-download': 'triggerDownload',
+    'click .checkbox-container': 'selected',
   },
   regions: {
     resultThumbnail: '.is-thumbnail',
+    checkboxContainer: '.checkbox-container',
   },
   attributes: function() {
     return {
@@ -68,16 +67,39 @@ module.exports = Marionette.LayoutView.extend({
     )
     this.handleSelectionChange()
   },
+  selected: function(e) {
+    e.target.checked
+      ? this.options.selectionInterface.addSelectedResult(this.model)
+      : this.options.selectionInterface.removeSelectedResult(this.model)
+    e.stopPropagation()
+  },
+  isSelected: function() {
+    const selectedResults = this.options.selectionInterface.getSelectedResults()
+    return Boolean(selectedResults.get(this.model.id))
+  },
   handleSelectionChange: function() {
-    var selectedResults = this.options.selectionInterface.getSelectedResults()
-    var isSelected = selectedResults.get(this.model.id)
-    this.$el.toggleClass('is-selected', Boolean(isSelected))
+    const isSelected = this.isSelected()
+    this.$el.toggleClass('is-selected', isSelected)
+    if (this.checkboxContainer.currentView) this.ShowCheckboxSelector()
   },
   onRender: function() {
     this.checkIfDownloadable()
     this.checkIfLinks()
     this.$el.attr(this.attributes())
     this.handleResultThumbnail()
+    this.ShowCheckboxSelector()
+  },
+  ShowCheckboxSelector() {
+    const CheckboxView = Marionette.LayoutView.extend({
+      template() {
+        return <Checkbox isSelected={this.options.isSelected} />
+      },
+    })
+    this.checkboxContainer.show(
+      new CheckboxView({
+        isSelected: this.isSelected(),
+      })
+    )
   },
   handleResultThumbnail: function() {
     var hiddenColumns = user

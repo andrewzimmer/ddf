@@ -13,22 +13,52 @@
  *
  **/
 /*global require, setTimeout*/
-var wreqr = require('../../../js/wreqr.js')
 var _ = require('underscore')
 var $ = require('jquery')
-var template = require('./thead.hbs')
 var Marionette = require('marionette')
 var CustomElements = require('../../../js/CustomElements.js')
-var Common = require('../../../js/Common.js')
 var user = require('../../singletons/user-instance.js')
 var properties = require('../../../js/properties.js')
 var metacardDefinitions = require('../../singletons/metacard-definitions.js')
-var jqueryui = require('jquery-ui')
 require('jquery-ui/ui/widgets/resizable')
 var isResizing = false
+import React from 'react'
+import Checkbox from '../../../react-component/presentation/checkbox/checkbox'
 
 module.exports = Marionette.ItemView.extend({
-  template: template,
+  template(props) {
+    const isSelected = this.allSelected()
+    console.log(isSelected)
+    return (
+      <React.Fragment>
+        <th key="the_box" className="checkbox-container">
+          <Checkbox
+            isSelected={isSelected}
+            onClick={this.toggleCurrentResults.bind(this)}
+          />
+        </th>
+        {props.map(type => {
+          return (
+            <th
+              className={`${type.hidden ? 'is-hidden-column' : ''} ${
+                type.sortable ? 'is-sortable' : ''
+              }`}
+              data-propertyid={type.id}
+              data-propertytext={type.label || type.id}
+              key={type.id}
+            >
+              <span className="column-text" title={type.label || type.id}>
+                {type.label || type.id}
+              </span>
+              <span className="fa fa-sort-asc" />
+              <span className="fa fa-sort-desc" />
+              <div className="resizer" />
+            </th>
+          )
+        })}
+      </React.Fragment>
+    )
+  },
   className: 'is-thead',
   tagName: CustomElements.register('result-thead'),
   events: {
@@ -54,6 +84,11 @@ module.exports = Marionette.ItemView.extend({
     this.listenTo(
       user.get('user').get('preferences'),
       'change:columnOrder',
+      this.render
+    )
+    this.listenTo(
+      this.options.selectionInterface.getSelectedResults(),
+      'update add remove reset',
       this.render
     )
     this.updateSorting = _.debounce(this.updateSorting, 500)
@@ -166,6 +201,28 @@ module.exports = Marionette.ItemView.extend({
   checkIfResizing: function(e) {
     if (!isResizing) {
       this.updateSorting(e)
+    }
+  },
+  allSelected: function() {
+    const currentResultsLength = this.options.selectionInterface.getActiveSearchResults()
+      .length
+    return (
+      currentResultsLength > 0 &&
+      currentResultsLength ===
+        this.options.selectionInterface.getSelectedResults().length
+    )
+  },
+  toggleCurrentResults: function() {
+    if (this.allSelected()) {
+      this.options.selectionInterface.clearSelectedResults()
+    } else {
+      const currentResults = this.options.selectionInterface.getActiveSearchResults()
+      const selectedResults = this.options.selectionInterface.getSelectedResults()
+      currentResults.forEach(result => {
+        if (selectedResults.get(result.id) === undefined) {
+          this.options.selectionInterface.addSelectedResult(result)
+        }
+      })
     }
   },
 })

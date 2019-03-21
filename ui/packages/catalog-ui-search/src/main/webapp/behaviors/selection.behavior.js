@@ -73,7 +73,7 @@ Behaviors.addBehavior(
         this.handleControlClick(resultid, alreadySelected)
       } else {
         this.options.selectionInterface.clearSelectedResults()
-        this.handleControlClick(resultid, alreadySelected)
+        this.handleControlClick(resultid, false)
       }
     },
     handleShiftClick: function(resultid, alreadySelected) {

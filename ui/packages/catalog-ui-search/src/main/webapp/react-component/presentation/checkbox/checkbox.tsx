@@ -1,4 +1,3 @@
-{{!--
 /**
  * Copyright (c) Codice Foundation
  *
@@ -10,17 +9,25 @@
  * <http://www.gnu.org/licenses/lgpl.html>.
  *
  **/
- --}}
-{{#each this}}
-    <th class="{{#if hidden}}is-hidden-column{{/if}} {{#if sortable}}is-sortable{{/if}}" data-propertyid="{{id}}" data-propertytext="{{label}}{{#unless label}}{{id}}{{/unless}}">
-        <span class="column-text" title="{{label}}{{#unless label}}{{id}}{{/unless}}">
-            {{label}}
-            {{#unless label}}
-                {{id}}
-            {{/unless}}
-        </span>
-        <span class="fa fa-sort-asc"></span>
-        <span class="fa fa-sort-desc"></span>
-        <div class="resizer"></div>
-    </th>
-{{/each}}
+import * as React from 'react'
+import { hot } from 'react-hot-loader'
+import styled from '../../styles/styled-components'
+
+type Props = {
+  isSelected: boolean
+  onClick?: (e: any) => void
+}
+
+const Box = styled.input`
+  display: inline;
+  margin-right: ${props => props.theme.mediumSpacing} !important;
+  margin-top: 0px !important;
+  text-align: center;
+  vertical-align: middle;
+`
+const Checkbox = (props: Props) => {
+  const isSelected = props.isSelected
+  return <Box type="checkbox" checked={isSelected} onChange={props.onClick} />
+}
+
+export default hot(module)(Checkbox)

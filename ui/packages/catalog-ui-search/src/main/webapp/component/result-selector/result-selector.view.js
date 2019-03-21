@@ -30,6 +30,8 @@ const ResultSortDropdownView = require('../dropdown/result-sort/dropdown.result-
 const user = require('../singletons/user-instance.js')
 const ResultStatusView = require('../result-status/result-status.view.js')
 require('../../behaviors/selection.behavior.js')
+import React from 'react'
+import Checkbox from '../../react-component/presentation/checkbox/checkbox'
 
 function mixinBlackListCQL(originalCQL) {
   var blackListCQL = {
@@ -79,6 +81,7 @@ var ResultSelector = Marionette.LayoutView.extend({
     resultDisplay: '.menu-resultDisplay',
     resultFilter: '.menu-resultFilter',
     resultSort: '.menu-resultSort',
+    checkboxContainer: '.checkbox-container',
   },
   initialize: function(options) {
     if (!this.model.get('result')) {
@@ -95,6 +98,7 @@ var ResultSelector = Marionette.LayoutView.extend({
     this.startListeningToResult()
     this.startListeningToMerged()
     this.startListeningToStatus()
+    this.startListeningToSelectedResults()
   },
   mergeNewResults: function() {
     this.model.get('result').mergeNewResults()
@@ -146,6 +150,38 @@ var ResultSelector = Marionette.LayoutView.extend({
       this.onBeforeShow
     )
   },
+  startListeningToSelectedResults: function() {
+    this.listenTo(
+      this.options.selectionInterface.getSelectedResults(),
+      'update add remove reset',
+      this.handleSelectionChange
+    )
+  },
+  handleSelectionChange: function() {
+    this.showCheckbox()
+  },
+  allSelected: function() {
+    const currentResultsLength = this.options.selectionInterface.getActiveSearchResults()
+      .length
+    return (
+      currentResultsLength > 0 &&
+      currentResultsLength ===
+        this.options.selectionInterface.getSelectedResults().length
+    )
+  },
+  toggleCurrentResults: function() {
+    if (this.allSelected()) {
+      this.options.selectionInterface.clearSelectedResults()
+    } else {
+      const currentResults = this.options.selectionInterface.getActiveSearchResults()
+      const selectedResults = this.options.selectionInterface.getSelectedResults()
+      currentResults.forEach(result => {
+        if (selectedResults.get(result.id) === undefined) {
+          this.options.selectionInterface.addSelectedResult(result)
+        }
+      })
+    }
+  },
   scrollIntoView: function(metacard) {
     var result = this.$el.find(
       '.resultSelector-list ' +
@@ -185,6 +221,7 @@ var ResultSelector = Marionette.LayoutView.extend({
     this.showResultDisplayDropdown()
     this.showResultFilterDropdown()
     this.showResultSortDropdown()
+    this.showCheckbox()
     this.handleFiltering(collapsedResults)
     this.handleMerged()
     this.handleStatus()
@@ -231,6 +268,24 @@ var ResultSelector = Marionette.LayoutView.extend({
     this.resultSort.show(
       new ResultSortDropdownView({
         model: new DropdownModel(),
+      })
+    )
+  },
+  showCheckbox: function() {
+    const CheckboxView = Marionette.LayoutView.extend({
+      template() {
+        return (
+          <Checkbox
+            isSelected={this.options.isSelected}
+            onClick={this.options.onClick}
+          />
+        )
+      },
+    })
+    this.checkboxContainer.show(
+      new CheckboxView({
+        isSelected: this.allSelected(),
+        onClick: this.toggleCurrentResults.bind(this),
       })
     )
   },

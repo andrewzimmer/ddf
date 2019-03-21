@@ -17,6 +17,7 @@ import React from 'react'
 import MarionetteRegionContainer from '../../react-component/container/marionette-region-container'
 
 import MetacardInteractionsDropdown from '../../react-component/container/metacard-interactions/metacard-interactions-dropdown'
+import Checkbox from '../../react-component/presentation/checkbox/checkbox'
 const Backbone = require('backbone')
 const Marionette = require('marionette')
 const _ = require('underscore')
@@ -74,6 +75,7 @@ const ResultItemView = Marionette.LayoutView.extend({
       .get('metacard')
       .get('properties')
       .get('associations.external')
+    const isSelected = this.isSelected()
 
     return (
       <React.Fragment>
@@ -89,6 +91,9 @@ const ResultItemView = Marionette.LayoutView.extend({
           />
           <div className="container-content">
             <div className="content-header">
+              <div className="checkbox-container">
+                <Checkbox isSelected={isSelected} />
+              </div>
               <span
                 className="header-icon fa fa-history"
                 title="Type: Revision"
@@ -241,6 +246,13 @@ const ResultItemView = Marionette.LayoutView.extend({
       </React.Fragment>
     )
   },
+  selected: function(e) {
+    console.log('selected', e.target.checked)
+    e.target.checked
+      ? this.options.selectionInterface.addSelectedResult(this.model)
+      : this.options.selectionInterface.removeSelectedResult(this.model)
+    e.stopPropagation()
+  },
   getExtensions: function() {
     return null
   },
@@ -256,6 +268,7 @@ const ResultItemView = Marionette.LayoutView.extend({
   modelEvents: {},
   events: {
     'click .result-download': 'triggerDownload',
+    'click .checkbox-container': 'selected',
   },
   regions: {
     resultAdd: '.result-add',
@@ -311,10 +324,14 @@ const ResultItemView = Marionette.LayoutView.extend({
     )
     this.handleSelectionChange()
   },
-  handleSelectionChange: function() {
+  isSelected: function() {
     const selectedResults = this.options.selectionInterface.getSelectedResults()
-    const isSelected = selectedResults.get(this.model.id)
-    this.$el.toggleClass('is-selected', Boolean(isSelected))
+    return Boolean(selectedResults.get(this.model.id))
+  },
+  handleSelectionChange: function() {
+    const isSelected = this.isSelected()
+    this.$el.toggleClass('is-selected', isSelected)
+    this.render()
   },
   handleMetacardUpdate: function() {
     this.$el.attr(this.attributes())
