@@ -1,0 +1,21 @@
+@{customElementNamespace}selection-checkbox {
+  .customElement;
+  display: block;
+  width: @minimumSpacing;
+  padding-right: @minimumButtonSize;
+  .checked {
+    display: none;
+  }
+  .not-checked {
+    display: inline;
+  }
+}
+
+@{customElementNamespace}selection-checkbox.is-checked {
+  .checked {
+    display: inline;
+  }
+  .not-checked {
+    display: none;
+  }
+}

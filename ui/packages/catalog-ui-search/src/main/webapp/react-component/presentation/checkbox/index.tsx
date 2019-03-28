@@ -1,4 +1,3 @@
-{{!--
 /**
  * Copyright (c) Codice Foundation
  *
@@ -10,18 +9,4 @@
  * <http://www.gnu.org/licenses/lgpl.html>.
  *
  **/
- --}}
-  <th class="checbox-container"><div class="checkbox-container"></div></th>
-{{#each this}}
-    <th class="{{#if hidden}}is-hidden-column{{/if}} {{#if sortable}}is-sortable{{/if}}" data-propertyid="{{id}}" data-propertytext="{{label}}{{#unless label}}{{id}}{{/unless}}">
-        <span class="column-text" title="{{label}}{{#unless label}}{{id}}{{/unless}}">
-            {{label}}
-            {{#unless label}}
-                {{id}}
-            {{/unless}}
-        </span>
-        <span class="fa fa-sort-asc"></span>
-        <span class="fa fa-sort-desc"></span>
-        <div class="resizer"></div>
-    </th>
-{{/each}}
+export { default } from './checkbox'
