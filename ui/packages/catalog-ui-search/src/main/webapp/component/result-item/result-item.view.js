@@ -220,6 +220,7 @@ const ResultItemView = Marionette.LayoutView.extend({
           </div>
           <Divider />
           <Footer className="content-footer">
+            <div className="checkbox-container" />
             <div className="result-validation">
               {data.hasError ? (
                 <span
