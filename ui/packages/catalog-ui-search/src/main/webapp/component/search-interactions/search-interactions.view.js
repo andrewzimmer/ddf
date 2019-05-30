@@ -13,6 +13,7 @@
  *
  **/
 
+import * as React from 'react'
 const Marionette = require('marionette')
 const template = require('./search-interactions.hbs')
 const CustomElements = require('../../js/CustomElements.js')
@@ -23,20 +24,45 @@ const user = require('../singletons/user-instance.js')
 const properties = require('../../js/properties.js')
 
 module.exports = Marionette.LayoutView.extend({
-  template,
+  template() {
+    return (
+      <React.Fragment>
+        {this.options.searchFormTitles.map(form => {
+          return (
+            <div
+              className="interaction interaction-form"
+              title={`Use the ${form} Form to construct the search.`}
+              data-help={`Use the ${form} Form to construct the search.`}
+              onClick={() => this.triggerFormSwitch(form)}
+            >
+              <div className="interaction-icon fa fa-search" />
+              <div className="interaction-text">{form}</div>
+            </div>
+          )
+        })}
+        <div className="is-divider composed-menu" />
+        <div
+          className="interaction interaction-type"
+          title="Change the form used to construct the search."
+          data-help="Change the form used to construct the search."
+        />
+        <div className="is-divider composed-menu" />
+        <div
+          className="interaction interaction-reset"
+          title="Resets the search form."
+          data-help="Resets the search form."
+          onClick={this.triggerReset}
+        >
+          <div className="interaction-icon fa fa-undo" />
+          <div className="interaction-text">Reset</div>
+        </div>
+      </React.Fragment>
+    )
+  },
   tagName: CustomElements.register('search-interactions'),
   className: 'composed-menu',
   regions: {
     searchType: '.interaction-type',
-    resultType: '.interaction-result-type',
-    searchAdvanced: '.interaction-type-advanced',
-    searchSettings: '.interaction-settings',
-  },
-  events: {
-    'click > .interaction-reset': 'triggerReset',
-    'click > .interaction-type-advanced': 'triggerTypeAdvanced',
-    'click > .interaction-type-basic': 'triggerTypeBasic',
-    'click > .interaction-type-text': 'triggerTypeText',
   },
   onRender() {
     this.listenTo(
@@ -81,21 +107,9 @@ module.exports = Marionette.LayoutView.extend({
       }.bind(this)
     )
   },
-  triggerTypeAdvanced() {
-    this.model.set('type', 'advanced')
-    user.getQuerySettings().set('type', 'advanced')
-    user.savePreferences()
-    this.triggerCloseDropdown()
-  },
-  triggerTypeBasic() {
-    this.model.set('type', 'basic')
-    user.getQuerySettings().set('type', 'basic')
-    user.savePreferences()
-    this.triggerCloseDropdown()
-  },
-  triggerTypeText() {
-    this.model.set('type', 'text')
-    user.getQuerySettings().set('type', 'text')
+  triggerFormSwitch(title) {
+    this.model.set('type', title)
+    user.getQuerySettings().set('type', title)
     user.savePreferences()
     this.triggerCloseDropdown()
   },

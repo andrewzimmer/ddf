@@ -29,6 +29,21 @@ const wreqr = require('../../js/wreqr.js')
 const announcement = require('../announcement/index.jsx')
 const user = require('../singletons/user-instance.js')
 import { InvalidSearchFormMessage } from 'component/announcement/CommonMessages'
+const plugin = require('plugins/query-add')
+
+const SearchForms = plugin.SearchForms([
+  { view: QueryBasic, title: 'Basic Search' },
+  { view: QueryAdhoc, title: 'Text Search' },
+  {
+    view: QueryAdvanced,
+    options: {
+      isForm: false,
+      isFormBuilder: false,
+      isAdd: true,
+    },
+    title: 'Advanced Search',
+  },
+])
 
 module.exports = Marionette.LayoutView.extend({
   template,
@@ -65,26 +80,20 @@ module.exports = Marionette.LayoutView.extend({
     }
   },
   reshow() {
-    this.$el.toggleClass(
-      'is-form-builder',
-      this.model.get('type') === 'new-form'
-    )
-    switch (this.model.get('type')) {
+    const formType = this.model.get('type')
+    this.$el.toggleClass('is-form-builder', formType === 'new-form')
+    switch (formType) {
       case 'new-form':
         this.showFormBuilder()
-        break
-      case 'text':
-        this.showText()
-        break
-      case 'basic':
-        this.showBasic()
-        break
-      case 'advanced':
-        this.showAdvanced()
         break
       case 'custom':
         this.showCustom()
         break
+      default:
+        const searchForm = SearchForms.find(form => form.title === formType)
+        if (searchForm) {
+          this.showForm(searchForm)
+        }
     }
   },
   onBeforeShow() {
@@ -125,9 +134,11 @@ module.exports = Marionette.LayoutView.extend({
     }
   },
   showTitle() {
+    const searchFormTitles = SearchForms.map(form => form.title)
     this.queryTitle.show(
       new QueryTitle({
         model: this.model,
+        searchFormTitles: searchFormTitles,
       })
     )
   },
@@ -140,17 +151,12 @@ module.exports = Marionette.LayoutView.extend({
       })
     )
   },
-  showText() {
+  showForm: function(form) {
+    const options = form.options || {}
     this.queryContent.show(
-      new QueryAdhoc({
+      new form.view({
         model: this.model,
-      })
-    )
-  },
-  showBasic() {
-    this.queryContent.show(
-      new QueryBasic({
-        model: this.model,
+        ...options,
       })
     )
   },
@@ -158,16 +164,6 @@ module.exports = Marionette.LayoutView.extend({
     if (this.$el.hasClass('is-editing')) {
       this.edit()
     }
-  },
-  showAdvanced() {
-    this.queryContent.show(
-      new QueryAdvanced({
-        model: this.model,
-        isForm: false,
-        isFormBuilder: false,
-        isAdd: true,
-      })
-    )
   },
   showCustom() {
     this.queryContent.show(

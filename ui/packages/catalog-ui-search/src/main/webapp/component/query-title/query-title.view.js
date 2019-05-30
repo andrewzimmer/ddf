@@ -68,6 +68,7 @@ module.exports = Marionette.LayoutView.extend({
     this.searchInteractions.show(
       new SearchInteractionsDropdownView({
         model: new DropdownModel(),
+        searchFormTitles: this.options.searchFormTitles,
         modelForComponent: this.model,
         dropdownCompanionBehaviors: {
           navigation: {},
