@@ -80,7 +80,6 @@ class SearchForms extends React.Component {
     }
   }
   changeView(selectedForm, currentQuery) {
-    console.log(selectedForm, currentQuery)
     const sharedAttributes = selectedForm.transformToQueryStructure()
     currentQuery.set({
       type: 'custom',

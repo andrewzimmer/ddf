@@ -145,7 +145,7 @@ module.exports = Marionette.LayoutView.extend({
     )
   },
   showForm(form) {
-    const options = form.options || {}
+    const options = form.viewOptions || {}
     this.queryContent.show(
       new form.view({
         model: this.model,
@@ -154,7 +154,7 @@ module.exports = Marionette.LayoutView.extend({
     )
   },
   showQueryForm(form) {
-    const options = form.options || {}
+    const options = form.viewOptions || {}
     const queryFormView = Marionette.LayoutView.extend({
       template: () => (
         <form.view

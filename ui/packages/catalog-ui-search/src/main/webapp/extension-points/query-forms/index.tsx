@@ -16,18 +16,27 @@ const QueryAdhoc = require('../../component/query-adhoc/query-adhoc.view.js')
 const QueryBasic = require('../../component/query-basic/query-basic.view.js')
 const QueryAdvanced = require('../../component/query-advanced/query-advanced.view.js')
 
-export default [
-  { id: 'text', title: 'Text Search', view: QueryAdhoc, disabled: false },
-  { id: 'basic', title: 'Basic Search', view: QueryBasic, disabled: false },
+type queryFormType = {
+  id: string
+  title: string
+  view: any
+  viewOptions?: any
+  formOptions?: any
+}
+
+const queryForms: queryFormType[] = [
+  { id: 'text', title: 'Text Search', view: QueryAdhoc },
+  { id: 'basic', title: 'Basic Search', view: QueryBasic },
   {
     id: 'advanced',
     title: 'Advanced Search',
     view: QueryAdvanced,
-    options: {
+    viewOptions: {
       isForm: false,
       isFormBuilder: false,
       isAdd: true,
     },
-    disabled: false,
   },
 ]
+
+export default queryForms

@@ -14,7 +14,6 @@
  **/
 import * as React from 'react'
 import { Props as PresentationProps } from './search-interactions.presentation'
-// import SearchInteractionsPresentation from '../../react-component/presentation/search-interactions'
 import { hot } from 'react-hot-loader'
 import withListenTo, {
   WithBackboneProps,

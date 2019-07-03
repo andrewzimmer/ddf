@@ -58,7 +58,6 @@ module.exports = Marionette.LayoutView.extend({
           <div className=" search-interactions">
             {this.options.isSearchFormEditor !== true && (
               <StyledDropdown anchor={<Icon className="fa fa-ellipsis-v" />}>
-                {/* <SearchInteractions model={this.model} /> */}
                 <ExtensionPoints.searchInteractions model={this.model} />
               </StyledDropdown>
             )}
