@@ -15,13 +15,12 @@
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
 import ExtensionPoints from '../extension-points'
+const { Menu, MenuItem } = require('../../react-component/menu')
 
 import SearchInteractionsContainer from './search-interactions.container'
 import {
   Props as PresentationProps,
-  SearchInteractionMenu,
-  SearchFormMenuItem,
-  CustomSearchFormMenuItem,
+  CustomSearchFormDropdown,
   Text,
   Divider,
   Icon,
@@ -36,46 +35,48 @@ const SearchInteractions = (props: SearchInteractionProps) => (
   <SearchInteractionsContainer model={props.model} onClose={props.onClose}>
     {(props: PresentationProps) => {
       return (
-        <SearchInteractionMenu
-          onClick={(formId: any) => props.triggerQueryForm(formId)}
-        >
+        <Menu onChange={(formId: any) => props.triggerQueryForm(formId)}>
           {ExtensionPoints.queryForms.map(form => {
             return (
-              <SearchFormMenuItem
+              <MenuItem
                 key={form.id}
                 value={form.id}
                 title={`Use the ${form.title} Form to construct the search.`}
-                help={`Use the ${form.title} Form to construct the search.`}
+                data-help={`Use the ${
+                  form.title
+                } Form to construct the search.`}
               >
                 <Text>
                   <Icon className="fa fa-search" />
                   {form.title}
                 </Text>
-              </SearchFormMenuItem>
+              </MenuItem>
             )
           })}
           <Divider />
-          <CustomSearchFormMenuItem
-            model={props.model}
+          <MenuItem
             key={'formSelector'}
             value={'formSelector'}
             title="Change the form used to construct the search."
-            help="Change the form used to construct the search."
-          />
+            data-help="Change the form used to construct the search."
+            onClick={() => {}}
+          >
+            <CustomSearchFormDropdown model={props.model} />
+          </MenuItem>
           <Divider />
-          <SearchFormMenuItem
+          <MenuItem
             key={'reset'}
             value={'reset'}
             title="Resets the search form."
-            help="Resets the search form."
+            data-help="Resets the search form."
             onClick={() => props.triggerReset()}
           >
             <Text>
               <Icon className="fa fa-undo" />
               Reset
             </Text>
-          </SearchFormMenuItem>
-        </SearchInteractionMenu>
+          </MenuItem>
+        </Menu>
       )
     }}
   </SearchInteractionsContainer>
