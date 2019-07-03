@@ -20,6 +20,9 @@ import { SFC } from '../react-component/hoc/utils'
 import { providers, Props as ProviderProps } from './providers'
 import visualizations from './visualizations'
 import queryForms from './query-forms'
+import searchInteractions, {
+  SearchInteractionProps,
+} from './search-interactions'
 
 export type ExtensionPointsType = {
   routes: {}
@@ -28,6 +31,7 @@ export type ExtensionPointsType = {
   providers: SFC<ProviderProps>
   visualizations: any[]
   queryForms: any[]
+  searchInteractions: SFC<SearchInteractionProps>
 }
 
 const ExtensionPoints: ExtensionPointsType = {
@@ -37,6 +41,7 @@ const ExtensionPoints: ExtensionPointsType = {
   providers: providers,
   visualizations: visualizations,
   queryForms: queryForms,
+  searchInteractions: searchInteractions,
 }
 
 export default ExtensionPoints

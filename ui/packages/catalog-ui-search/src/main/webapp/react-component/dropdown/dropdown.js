@@ -50,7 +50,8 @@ class Poller extends React.Component {
 }
 
 const getPosition = (viewport, rect) => {
-  const { x, y, width, height } = rect
+  const { x, y, height } = rect
+  const width = 'auto'
   const top = y + height
   const bottom = viewport.height - y
   const pos = top > viewport.height / 2 ? { bottom } : { top }

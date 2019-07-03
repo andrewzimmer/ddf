@@ -13,14 +13,26 @@
  *
  **/
 
+import * as React from 'react'
 const Marionette = require('marionette')
 const _ = require('underscore')
 const CustomElements = require('../../js/CustomElements.js')
-const SearchInteractionsDropdownView = require('../dropdown/search-interactions/dropdown.search-interactions.view.js')
-const DropdownModel = require('../dropdown/dropdown.js')
-const React = require('react')
+import Dropdown from '../../react-component/dropdown'
+import styled from '../../react-component/styles/styled-components'
+import ExtensionPoints from '../../extension-points'
 
 const zeroWidthSpace = '\u200B'
+
+const StyledDropdown = styled(Dropdown)`
+  height: 100%;
+  line-height: inherit;
+  width: auto;
+`
+
+const Icon = styled.span`
+  height: 100%;
+  width: 100%;
+`
 
 module.exports = Marionette.LayoutView.extend({
   events: {
@@ -43,7 +55,14 @@ module.exports = Marionette.LayoutView.extend({
         <div className="is-actions">
           <span className="button-title">{props.title}</span>
           <span className="is-button fa fa-pencil trigger-edit" />
-          <div className="is-button search-interactions" />
+          <div className=" search-interactions">
+            {this.options.isSearchFormEditor !== true && (
+              <StyledDropdown anchor={<Icon className="fa fa-ellipsis-v" />}>
+                {/* <SearchInteractions model={this.model} /> */}
+                <ExtensionPoints.searchInteractions model={this.model} />
+              </StyledDropdown>
+            )}
+          </div>
         </div>
       </React.Fragment>
     )
@@ -60,20 +79,6 @@ module.exports = Marionette.LayoutView.extend({
   },
   onRender() {
     this.updateQueryName()
-    if (this.options.isSearchFormEditor !== true) {
-      this.showSearchInteractions()
-    }
-  },
-  showSearchInteractions() {
-    this.searchInteractions.show(
-      new SearchInteractionsDropdownView({
-        model: new DropdownModel(),
-        modelForComponent: this.model,
-        dropdownCompanionBehaviors: {
-          navigation: {},
-        },
-      })
-    )
   },
   focus() {
     this.$el.find('input').focus()
