@@ -17,7 +17,7 @@ import ddf.catalog.operation.ProcessingDetails;
 import ddf.catalog.operation.QueryResponse;
 import java.util.Set;
 
-public class Status {
+public class StatusImpl implements Status {
 
   private final long hits;
 
@@ -29,7 +29,7 @@ public class Status {
 
   private final boolean successful;
 
-  public Status(QueryResponse response, String source, long elapsedTime) {
+  public StatusImpl(QueryResponse response, String source, long elapsedTime) {
     elapsed = elapsedTime;
     id = source;
 

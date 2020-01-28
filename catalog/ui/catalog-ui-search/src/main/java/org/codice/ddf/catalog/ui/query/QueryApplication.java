@@ -41,6 +41,7 @@ import org.codice.ddf.catalog.ui.query.suggestion.LatLonCoordinateProcessor;
 import org.codice.ddf.catalog.ui.query.suggestion.MgrsCoordinateProcessor;
 import org.codice.ddf.catalog.ui.query.suggestion.UtmUpsCoordinateProcessor;
 import org.codice.ddf.catalog.ui.query.validate.CqlValidationHandler;
+import org.codice.ddf.catalog.ui.util.CqlQueryUtility;
 import org.codice.ddf.catalog.ui.util.EndpointUtil;
 import org.codice.ddf.catalog.ui.ws.JsonRpc;
 import org.codice.ddf.spatial.geocoding.Suggestion;
@@ -90,6 +91,8 @@ public class QueryApplication implements SparkApplication, Function {
 
   private EndpointUtil util;
 
+  private CqlQueryUtility cqlQueryUtility;
+
   public QueryApplication(
       CqlTransformHandler cqlTransformHandler,
       CqlValidationHandler cqlValidationHandler,
@@ -115,7 +118,7 @@ public class QueryApplication implements SparkApplication, Function {
         (req, res) -> {
           try {
             CqlRequest cqlRequest = GSON.fromJson(util.safeGetBody(req), CqlRequest.class);
-            CqlQueryResponse cqlQueryResponse = util.executeCqlQuery(cqlRequest);
+            CqlQueryResponse cqlQueryResponse = cqlQueryUtility.executeCqlQuery(cqlRequest);
             return GSON.toJson(cqlQueryResponse);
           } catch (OauthPluginException e) {
             res.status(HttpStatus.SC_UNAUTHORIZED);
@@ -207,7 +210,7 @@ public class QueryApplication implements SparkApplication, Function {
     }
 
     try {
-      return util.executeCqlQuery(cqlRequest);
+      return cqlQueryUtility.executeCqlQuery(cqlRequest);
     } catch (OauthPluginException e) {
       Map<String, String> responseMap =
           ImmutableMap.of(ID_KEY, e.getSourceId(), URL_KEY, e.getProviderUrl());
@@ -230,5 +233,9 @@ public class QueryApplication implements SparkApplication, Function {
 
   public void setEndpointUtil(EndpointUtil util) {
     this.util = util;
+  }
+
+  public void setCqlQueryUtility(CqlQueryUtility cqlQueryUtility) {
+    this.cqlQueryUtility = cqlQueryUtility;
   }
 }

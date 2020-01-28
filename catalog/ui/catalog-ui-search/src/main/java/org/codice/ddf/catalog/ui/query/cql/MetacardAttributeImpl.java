@@ -15,7 +15,7 @@ package org.codice.ddf.catalog.ui.query.cql;
 
 import ddf.catalog.data.AttributeDescriptor;
 
-public class MetacardAttribute {
+public class MetacardAttributeImpl implements MetacardAttribute {
 
   private final String format;
 
@@ -23,7 +23,7 @@ public class MetacardAttribute {
 
   private final boolean indexed;
 
-  public MetacardAttribute(AttributeDescriptor descriptor) {
+  public MetacardAttributeImpl(AttributeDescriptor descriptor) {
     format = descriptor.getType().getAttributeFormat().toString();
     indexed = descriptor.isIndexed();
     multivalued = descriptor.isMultiValued();

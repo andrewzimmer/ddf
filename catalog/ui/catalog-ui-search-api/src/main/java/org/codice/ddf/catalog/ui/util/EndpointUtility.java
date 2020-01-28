@@ -11,20 +11,12 @@
  * License is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.ddf.catalog.ui.api;
+package org.codice.ddf.catalog.ui.util;
 
 import ddf.catalog.data.Result;
-import ddf.catalog.federation.FederationException;
-import ddf.catalog.source.SourceUnavailableException;
-import ddf.catalog.source.UnsupportedQueryException;
 import java.util.Map;
-import org.codice.ddf.catalog.ui.query.cql.CqlQueryResponse;
-import org.codice.ddf.catalog.ui.query.cql.CqlRequest;
 
 public interface EndpointUtility {
-
-  CqlQueryResponse executeCqlQuery(CqlRequest cqlRequest)
-      throws UnsupportedQueryException, SourceUnavailableException, FederationException;
 
   Map<String, Result> getMetacardsByTag(String tagStr);
 }

@@ -68,10 +68,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.codice.ddf.catalog.ui.config.ConfigurationApplication;
-import org.codice.ddf.catalog.ui.query.cql.CqlQueryResponse;
 import org.codice.ddf.catalog.ui.query.cql.CqlRequest;
-import org.codice.ddf.catalog.ui.query.cql.CqlResult;
-import org.codice.ddf.catalog.ui.transformer.TransformerDescriptors;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -164,9 +161,6 @@ public class EndpointUtilTest {
             injectableAttributeList,
             attributeRegistryMock,
             configurationApplicationMock);
-
-    endpointUtil.setDescriptors(
-        new TransformerDescriptors(Collections.emptyList(), Collections.emptyList()));
   }
 
   @Test
@@ -350,19 +344,6 @@ public class EndpointUtilTest {
   public void testParseDateEmptyString() {
     Serializable serializable = endpointUtil.parseDate("");
     assertThat(serializable, nullValue());
-  }
-
-  @Test
-  public void testHitCountOnlyQuery() throws Exception {
-    long hitCount = 12L;
-    when(responseMock.getResults()).thenReturn(Collections.emptyList());
-    when(responseMock.getHits()).thenReturn(hitCount);
-    when(catalogFrameworkMock.query(any(QueryRequestImpl.class))).thenReturn(responseMock);
-
-    CqlQueryResponse cqlQueryResponse = endpointUtil.executeCqlQuery(generateCqlRequest(0));
-    List<CqlResult> results = cqlQueryResponse.getResults();
-    assertThat(results, hasSize(0));
-    assertThat(cqlQueryResponse.getQueryResponse().getHits(), is(hitCount));
   }
 
   @Test
