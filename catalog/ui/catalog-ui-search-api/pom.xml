@@ -41,14 +41,12 @@
         <dependency>
             <groupId>org.codice.thirdparty</groupId>
             <artifactId>geotools-suite</artifactId>
-            <version>19.1_2</version>
-            <scope>compile</scope>
+            <version>${org.geotools.bundle.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-core</artifactId>
-            <version>2.5.5</version>
-            <scope>compile</scope>
+            <version>${spark.version}</version>
         </dependency>
     </dependencies>
 
