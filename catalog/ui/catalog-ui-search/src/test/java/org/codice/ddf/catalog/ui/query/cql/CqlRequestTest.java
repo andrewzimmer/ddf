@@ -22,7 +22,7 @@ import ddf.catalog.filter.FilterBuilder;
 import ddf.catalog.operation.QueryRequest;
 import java.util.Collections;
 import java.util.List;
-import org.codice.ddf.catalog.ui.metacard.workspace.transformer.CqlRequest;
+import org.codice.ddf.catalog.ui.query.utility.CqlRequest;
 import org.junit.Before;
 import org.opengis.filter.sort.SortBy;
 import org.opengis.filter.sort.SortOrder;

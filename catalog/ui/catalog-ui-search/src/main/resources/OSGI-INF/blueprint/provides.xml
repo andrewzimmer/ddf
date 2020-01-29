@@ -101,7 +101,7 @@ Services (OSGi) that catalog-ui-search PROVIDES to DDF
              interface="org.codice.ddf.catalog.ui.metacard.workspace.transformer.WorkspaceTransformer"/>
 
     <service ref="endpointUtil"
-             interface="org.codice.ddf.catalog.ui.metacard.workspace.transformer.EndpointUtility"/>
+             interface="org.codice.ddf.catalog.ui.query.utility.EndpointUtility"/>
 
     <service ref="workspacePersistentStore"
              interface="org.codice.ddf.catalog.ui.subscription.SubscriptionsPersistentStore">

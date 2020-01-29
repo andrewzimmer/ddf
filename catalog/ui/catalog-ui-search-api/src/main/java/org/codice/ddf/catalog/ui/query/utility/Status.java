@@ -1,4 +1,4 @@
-package org.codice.ddf.catalog.ui.metacard.workspace.transformer;
+package org.codice.ddf.catalog.ui.query.utility;
 
 public interface Status {
   long getHits();

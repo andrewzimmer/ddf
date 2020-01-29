@@ -68,7 +68,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.codice.ddf.catalog.ui.config.ConfigurationApplication;
-import org.codice.ddf.catalog.ui.metacard.workspace.transformer.CqlRequest;
+import org.codice.ddf.catalog.ui.query.utility.CqlRequest;
 import org.codice.ddf.catalog.ui.transformer.TransformerDescriptors;
 import org.junit.Before;
 import org.junit.Test;

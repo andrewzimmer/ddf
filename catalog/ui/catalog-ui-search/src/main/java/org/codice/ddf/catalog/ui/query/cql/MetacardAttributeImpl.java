@@ -14,7 +14,7 @@
 package org.codice.ddf.catalog.ui.query.cql;
 
 import ddf.catalog.data.AttributeDescriptor;
-import org.codice.ddf.catalog.ui.metacard.workspace.transformer.MetacardAttribute;
+import org.codice.ddf.catalog.ui.query.utility.MetacardAttribute;
 
 public class MetacardAttributeImpl implements MetacardAttribute {
 

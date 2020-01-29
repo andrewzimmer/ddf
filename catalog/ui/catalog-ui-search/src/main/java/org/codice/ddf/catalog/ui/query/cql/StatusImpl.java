@@ -16,7 +16,7 @@ package org.codice.ddf.catalog.ui.query.cql;
 import ddf.catalog.operation.ProcessingDetails;
 import ddf.catalog.operation.QueryResponse;
 import java.util.Set;
-import org.codice.ddf.catalog.ui.metacard.workspace.transformer.Status;
+import org.codice.ddf.catalog.ui.query.utility.Status;
 
 public class StatusImpl implements Status {
 

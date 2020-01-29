@@ -30,7 +30,7 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.codice.ddf.catalog.ui.forms.SearchFormsLoader;
 import org.codice.ddf.catalog.ui.forms.TemplateTransformer;
 import org.codice.ddf.catalog.ui.forms.filter.FilterWriter;
-import org.codice.ddf.catalog.ui.metacard.workspace.transformer.EndpointUtility;
+import org.codice.ddf.catalog.ui.query.utility.EndpointUtility;
 import org.codice.ddf.commands.catalog.SubjectCommands;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
