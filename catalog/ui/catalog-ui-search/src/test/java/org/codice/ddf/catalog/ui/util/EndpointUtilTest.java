@@ -69,7 +69,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.codice.ddf.catalog.ui.config.ConfigurationApplication;
 import org.codice.ddf.catalog.ui.query.utility.CqlRequest;
-import org.codice.ddf.catalog.ui.transformer.TransformerDescriptors;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -157,14 +156,12 @@ public class EndpointUtilTest {
             metacardTypeList,
             catalogFrameworkMock,
             filterBuilderMock,
-            filterAdapterMock,
-            actionRegistryMock,
             injectableAttributeList,
             attributeRegistryMock,
             configurationApplicationMock);
 
-    endpointUtil.setDescriptors(
-        new TransformerDescriptors(Collections.emptyList(), Collections.emptyList()));
+    //    endpointUtil.setDescriptors(
+    //        new TransformerDescriptors(Collections.emptyList(), Collections.emptyList()));
   }
 
   @Test
