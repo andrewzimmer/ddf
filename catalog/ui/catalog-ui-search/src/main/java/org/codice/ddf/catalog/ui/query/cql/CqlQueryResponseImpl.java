@@ -37,15 +37,19 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import org.codice.ddf.catalog.ui.metacard.workspace.transformer.CqlQueryResponse;
+import org.codice.ddf.catalog.ui.metacard.workspace.transformer.CqlResult;
+import org.codice.ddf.catalog.ui.metacard.workspace.transformer.MetacardAttribute;
+import org.codice.ddf.catalog.ui.metacard.workspace.transformer.Status;
 import org.codice.ddf.catalog.ui.query.delegate.SearchTerm;
 import org.codice.ddf.catalog.ui.query.delegate.SearchTermsDelegate;
 import org.codice.ddf.catalog.ui.transformer.TransformerDescriptors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CqlQueryResponse {
+public class CqlQueryResponseImpl implements CqlQueryResponse {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CqlQueryResponse.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CqlQueryResponseImpl.class);
 
   private static final SearchTermsDelegate SEARCH_TERMS_DELEGATE = new SearchTermsDelegate();
 
@@ -66,7 +70,7 @@ public class CqlQueryResponse {
   // Transient so as not to be serialized to/from JSON
   private final transient QueryResponse queryResponse;
 
-  public CqlQueryResponse(
+  public CqlQueryResponseImpl(
       String id,
       QueryRequest request,
       QueryResponse queryResponse,
@@ -80,7 +84,7 @@ public class CqlQueryResponse {
 
     this.queryResponse = queryResponse;
 
-    status = new Status(queryResponse, source, elapsedTime);
+    status = new StatusImpl(queryResponse, source, elapsedTime);
 
     AtomicBoolean logOnceState = new AtomicBoolean(false);
     Consumer<String> logOnce =
@@ -109,7 +113,7 @@ public class CqlQueryResponse {
                             .collect(
                                 Collectors.toMap(
                                     AttributeDescriptor::getName,
-                                    MetacardAttribute::new,
+                                    MetacardAttributeImpl::new,
                                     (ad1, ad2) -> {
                                       logOnce.accept(
                                           "Removed duplicate attribute descriptor(s). For more information:\n"
@@ -132,14 +136,14 @@ public class CqlQueryResponse {
             .stream()
             .map(
                 result ->
-                    new CqlResult(
+                    new CqlResultImpl(
                         result,
                         searchTerms,
                         queryResponse.getRequest(),
                         normalize,
                         filterAdapter,
                         actionRegistry))
-            .map(cqlResult -> new CqlResult(cqlResult, descriptors))
+            .map(cqlResult -> new CqlResultImpl(cqlResult, descriptors))
             .collect(Collectors.toList());
 
     this.facets = getFacetResults(queryResponse.getPropertyValue(EXPERIMENTAL_FACET_RESULTS_KEY));

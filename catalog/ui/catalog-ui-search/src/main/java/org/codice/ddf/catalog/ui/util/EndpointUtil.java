@@ -79,11 +79,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.lang3.StringUtils;
-import org.codice.ddf.catalog.ui.api.EndpointUtility;
 import org.codice.ddf.catalog.ui.config.ConfigurationApplication;
 import org.codice.ddf.catalog.ui.metacard.EntityTooLargeException;
-import org.codice.ddf.catalog.ui.query.cql.CqlQueryResponse;
-import org.codice.ddf.catalog.ui.query.cql.CqlRequest;
+import org.codice.ddf.catalog.ui.metacard.workspace.transformer.CqlQueryResponse;
+import org.codice.ddf.catalog.ui.metacard.workspace.transformer.CqlRequest;
+import org.codice.ddf.catalog.ui.metacard.workspace.transformer.EndpointUtility;
+import org.codice.ddf.catalog.ui.query.cql.CqlQueryResponseImpl;
 import org.codice.ddf.catalog.ui.transformer.TransformerDescriptors;
 import org.codice.gsonsupport.GsonTypeAdapters.LongDoubleTypeAdapter;
 import org.geotools.factory.CommonFactoryFinder;
@@ -558,7 +559,7 @@ public class EndpointUtil implements EndpointUtility {
 
     stopwatch.stop();
 
-    return new CqlQueryResponse(
+    return new CqlQueryResponseImpl(
         cqlRequest.getId(),
         request,
         response,
