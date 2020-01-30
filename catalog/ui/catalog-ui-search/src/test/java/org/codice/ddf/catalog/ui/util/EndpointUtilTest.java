@@ -159,9 +159,6 @@ public class EndpointUtilTest {
             injectableAttributeList,
             attributeRegistryMock,
             configurationApplicationMock);
-
-    //    endpointUtil.setDescriptors(
-    //        new TransformerDescriptors(Collections.emptyList(), Collections.emptyList()));
   }
 
   @Test
@@ -346,19 +343,6 @@ public class EndpointUtilTest {
     Serializable serializable = endpointUtil.parseDate("");
     assertThat(serializable, nullValue());
   }
-
-  //  @Test
-  //  public void testHitCountOnlyQuery() throws Exception {
-  //    long hitCount = 12L;
-  //    when(responseMock.getResults()).thenReturn(Collections.emptyList());
-  //    when(responseMock.getHits()).thenReturn(hitCount);
-  //    when(catalogFrameworkMock.query(any(QueryRequestImpl.class))).thenReturn(responseMock);
-  //
-  //    CqlQueryResponseImpl cqlQueryResponse = endpointUtil.executeCqlQuery(generateCqlRequest(0));
-  //    List<CqlResult> results = cqlQueryResponse.getResults();
-  //    assertThat(results, hasSize(0));
-  //    assertThat(cqlQueryResponse.getQueryResponse().getHits(), is(hitCount));
-  //  }
 
   @Test
   public void testCopyAttributes() {
